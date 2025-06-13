@@ -1,84 +1,96 @@
 import time
 import random
+
 # Prints slower
 def print_pause(msg):
-print(msg)
-time.sleep(1.5)
-# game intro description
+    print(msg)
+    time.sleep(1.5)
+
+# Game introduction
 def intro():
-print_pause("You are standing in a field with tall grass and wildflowers.")
-print_pause("There's a small house in front of you and a dark cave to your right.")
-print_pause("You only have a basic magic wand in your hand.")
-print_pause("People say a scary fairy and a dragon live somewhere here...")
-# What happens in the cave
+    print_pause("You are standing in a field with tall grass and wildflowers.")
+    print_pause("There's a small house in front of you and a dark cave to your right.")
+    print_pause("You only have a basic magic wand in your hand.")
+    print_pause("People say a scary fairy and a dragon live somewhere here...")
+
+# Events in the cave
 def cave(inventory, score):
-print_pause("You walk towards the cave and peek inside.")
-event = random.choice(["sword", "bones", "dragon"]) # the things that you could find in cave
-if "sword" in inventory and event != "dragon":
-print_pause("It's empty now. Nothing left here.")
-elif event == "sword":
-print_pause("You spot something shiny behind a rock.")
-print_pause("It's a sword! You pick it up and feel braver already.")
-inventory.append("sword")
-score += 10
-elif event == "dragon":
-print_pause("A wild dragon appears! It looks hungry!")
-if "sword" in inventory:
-print_pause("You bravely fight the dragon with your sword and win!")
-print_pause("You find a golden coin among the dragon's things.")
-inventory.append("golden coin")
-score += 20
-else:
-print_pause("You try to fight with your wand, but the dragon scares you away!")
-print_pause("Maybe you need something stronger...")
-else:
-print_pause("You only find some old bones... Creepy!")
-return choose_path(inventory, score)
-# stuff that happen at the house
+    print_pause("You walk towards the cave and peek inside.")
+    event = random.choice(["sword", "bones", "dragon"])  # random cave event
+
+    if "sword" in inventory and event != "dragon":
+        print_pause("It's empty now. Nothing left here.")
+    elif event == "sword":
+        print_pause("You spot something shiny behind a rock.")
+        print_pause("It's a sword! You pick it up and feel braver already.")
+        inventory.append("sword")
+        score += 10
+    elif event == "dragon":
+        print_pause("A wild dragon appears! It looks hungry!")
+        if "sword" in inventory:
+            print_pause("You bravely fight the dragon with your sword and win!")
+            print_pause("You find a golden coin among the dragon's things.")
+            inventory.append("golden coin")
+            score += 20
+        else:
+            print_pause("You try to fight with your wand, but the dragon scares you away!")
+            print_pause("Maybe you need something stronger...")
+    else:
+        print_pause("You only find some old bones... Creepy!")
+
+    return score
+
+# Things at the house
 def house(inventory, score):
-print_pause("You go up to the house and knock on the door.")
-print_pause("Suddenly, a wicked fairy opens the door and looks angry!")
-if "sword" in inventory:
-print_pause("You pull out your sword. The fairy gets scared and runs away!")
-print_pause("Congrats! You saved the village!")
-score += 30
-if "golden coin" in inventory:
-print_pause("The villagers thank you and reward you for finding the golden coin!")
-score += 10
-else:
-print_pause("You only have your wand. The fairy laughs and you run away!")
-print_pause("Maybe you should try again with something stronger...")
-return score
-# what is your decision
+    print_pause("You go up to the house and knock on the door.")
+    print_pause("Suddenly, a wicked fairy opens the door and looks angry!")
+    if "sword" in inventory:
+        print_pause("You pull out your sword. The fairy gets scared and runs away!")
+        print_pause("Congrats! You saved the village!")
+        score += 30
+        if "golden coin" in inventory:
+            print_pause("The villagers thank you and reward you for finding the golden coin!")
+            score += 10
+    else:
+        print_pause("You only have your wand. The fairy laughs and you run away!")
+        print_pause("Maybe you should try again with something stronger...")
+    return score
+
+# Main decision loop
 def choose_path(inventory, score):
-print_pause("What do you want to do next?")
-print_pause("1. Knock on the house door")
-print_pause("2. Check out the cave")
-choice = input("Enter 1 or 2: ")
-if choice == "1":
-return house(inventory, score)
-elif choice == "2":
-return cave(inventory, score)
-else:
-print_pause("Please choose 1 or 2.")
-return choose_path(inventory, score)
-# wanna play again
+    while True:
+        print_pause("What do you want to do next?")
+        print_pause("1. Knock on the house door")
+        print_pause("2. Check out the cave")
+        choice = input("Enter 1 or 2: ")
+        if choice == "1":
+            score = house(inventory, score)
+            return score
+        elif choice == "2":
+            score = cave(inventory, score)
+        else:
+            print_pause("Please choose 1 or 2.")
+
+# Ask to play again
 def play_again(total_score):
-again = input("Do you want to play again? (yes/no): ").lower()
-if again == "yes":
-play_game(total_score)
-elif again == "no":
-print_pause("Thanks for playing!")
-else:
-print_pause("pls enter yes/no")
-play_again(total_score)
-# game looper
+    again = input("Do you want to play again? (yes/no): ").lower()
+    if again == "yes":
+        play_game(total_score)
+    elif again == "no":
+        print_pause("Thanks for playing!")
+    else:
+        print_pause("Please enter yes or no.")
+        play_again(total_score)
+
+# Resetting everything
 def play_game(total_score=0):
-inventory = []
-score = 0
-intro()
-score = choose_path(inventory, score)
-total_score += score
-print_pause(f"Your total score: {total_score}")
-play_again(total_score)
+    inventory = []
+    score = 0
+    intro()
+    score = choose_path(inventory, score)
+    total_score += score
+    print_pause(f"Your total score: {total_score}")
+    play_again(total_score)
+
+# Start the game
 play_game()
